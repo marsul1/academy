@@ -1,0 +1,66 @@
+greeting:
+  message: "hello"
+external-api:
+  url: "http://bmw.external.com"
+quarkus:
+  log:
+    level: INFO
+    min-level: DEBUG
+    category:
+   #   "com.bmw.ctw.workstation.rack.module"
+   #     level: DEBUG
+    console:
+      format: "%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n <%X{requestId}>"
+      json:
+        pretty-print: false
+  rest-client:
+    external-api:
+      url: ${external-api.url}
+  http:
+    cors:
+      ~: true
+      origins:
+        - http://localhost:4200
+      headers:
+        - accept
+        - authorization
+        - content-type
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+  datasource:
+    db-kind: postgresql
+    devservices:
+      enabled: true
+      reuse: false
+      image-name: "postgres:14.10-alpine"
+      container-env:
+        "POSTGRES_DB": "workstation-rack"
+        "POSTGRES_USER": "postgres"
+        "PASSWORD": "postgres"
+      port: 5432
+      volumes:
+        "db/init-db": "/docker-entrypoint-initdb.d"
+      db-name: "workstation-rack"
+      username: "postgres"
+      password: "postgres"
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/workstation-rack
+      initial-size: 2
+      min-size: 2
+      max-size: 5
+  liquibase:
+    migrate-at-start: true
+    search-path:
+      - "db/"
+    change-log: "db/changelog.xml"
+
+  hibernate-orm:
+    packages: com.ctw.workstation
+    validate-in-dev-mode: false
+    database:
+      generation: none
+    log:
+      sql: ${hibernate_orm_log_sql:false}
