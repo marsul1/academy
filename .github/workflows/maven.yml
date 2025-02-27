@@ -20,10 +20,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
     - name: docker init
       run:  docker build . --file src/main/docker/Dockerfile.jvm --tag academy:$(date +%s)
     - name: check if docker is running
       run: docker image
-
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
