@@ -9,22 +9,15 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
+    - uses: marsul1/academy/.github/actions/maven_build@main
+
+    - uses: marsul1/academy/.github/actions/docker_build@main
       with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+        dockerfile_path: "src/main/docker/Dockerfile.jvm"
 
-
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: docker init
-      run:  docker build . --file src/main/docker/Dockerfile.jvm --tag academy:$(date +%s)
     - name: check if docker is running
       run: docker images
+
