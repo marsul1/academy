@@ -1,0 +1,13 @@
+name: pushImage
+description: push image to docker hub
+inputs:
+  docker_image_name_username:
+    description: "Image name"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: push docker image
+      run: docker push ${{ inputs.docker_image_name_username}}
+      shell: bash
